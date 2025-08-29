@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Crew Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2>Crew Dashboard</h2>
+  <div class="row g-3">
+    <div class="col-md-6">
+      <div class="card p-3">
+        <h5>My Upcoming Flights</h5>
+        <ul>
+          {% for f in upcoming_flights|default:[] %}
+            <li>{{ f.flight_number }} — {{ f.departure_time|date:"M d H:i" }}</li>
+          {% empty %}
+            <li class="text-muted">No upcoming assignments.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card p-3">
+        <h5>Messages</h5>
+        <ul>
+          {% for m in messages_list|default:[] %}
+            <li>{{ m.subject }} — <small class="text-muted">{{ m.created_at }}</small></li>
+          {% empty %}
+            <li class="text-muted">No messages.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

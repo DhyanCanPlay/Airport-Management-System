@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Analytics & Reporting{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2>Analytics & Reports</h2>
+  {% if report_summary %}
+    <div class="row g-3">
+      <div class="col-md-4"><div class="card p-3">Flights Today: <strong>{{ report_summary.flights_today }}</strong></div></div>
+      <div class="col-md-4"><div class="card p-3">On-Time %: <strong>{{ report_summary.on_time_percent }}%</strong></div></div>
+      <div class="col-md-4"><div class="card p-3">Avg Delay: <strong>{{ report_summary.avg_delay_minutes }} min</strong></div></div>
+    </div>
+  {% else %}
+    <div class="alert alert-info">No analytics data available.</div>
+  {% endif %}
+</div>
+{% endblock %}

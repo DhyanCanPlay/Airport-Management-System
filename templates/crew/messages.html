@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Crew Messages{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2>Messages</h2>
+  {% if messages_list %}
+    <ul class="list-group">
+      {% for m in messages_list %}
+        <li class="list-group-item">
+          <strong>{{ m.subject }}</strong>
+          <div class="small text-muted">{{ m.created_at }}</div>
+          <p>{{ m.body }}</p>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <div class="alert alert-info">No messages.</div>
+  {% endif %}
+</div>
+{% endblock %}

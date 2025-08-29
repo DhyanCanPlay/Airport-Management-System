@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Online Check-in - {{ booking.booking_reference }}{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2 class="mb-4">Online Check-in for {{ booking.booking_reference }}</h2>
+  <div class="row">
+    <div class="col-md-8">
+      <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+          <div class="mb-3">
+            <label class="form-label">{{ field.label }}</label>
+            {{ field }}
+            {% for error in field.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+        {% endfor %}
+        <button class="btn btn-primary">Complete Check-in</button>
+      </form>
+    </div>
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body">
+          <h5>Flight Summary</h5>
+          <p>{{ booking.flight.flight_number }} — {{ booking.flight.airline }}</p>
+          <p>{{ booking.flight.departure_city }} → {{ booking.flight.arrival_city }}</p>
+          <p>Departure: {{ booking.flight.departure_time|date:"M d, Y H:i" }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Audit Log{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2>Audit Log</h2>
+  {% if logs %}
+    <table class="table">
+      <thead><tr><th>When</th><th>User</th><th>Action</th><th>Object</th></tr></thead>
+      <tbody>
+        {% for l in logs %}
+          <tr><td>{{ l.timestamp }}</td><td>{{ l.user }}</td><td>{{ l.action }}</td><td>{{ l.object_repr }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="alert alert-info">No audit records.</div>
+  {% endif %}
+</div>
+{% endblock %}

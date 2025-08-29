@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Airport Management System{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    {% block extra_css %}{% endblock %}
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --nav-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafc;
+        }
+        
+        .navbar-modern {
+            background: white !important;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--nav-shadow);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            padding: 1rem 0;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.4rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav-link {
+            color: #64748b !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-link:hover {
+            color: #667eea !important;
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        .nav-link.active {
+            color: #667eea !important;
+            background: rgba(102, 126, 234, 0.15);
+        }
+        
+        .portal-dropdown .dropdown-menu {
+            border: none;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            border-radius: 12px;
+            padding: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .portal-item {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: none;
+            background: none;
+        }
+        
+        .portal-item:hover {
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .portal-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 0.9rem;
+        }
+        
+        .icon-customer { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .icon-airline { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; }
+        .icon-crew { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; }
+        .icon-admin { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); color: #d63384; }
+        
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .footer-modern {
+            background: white;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            padding: 3rem 0 2rem;
+            margin-top: 4rem;
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        @media (max-width: 768px) {
+            .navbar-modern {
+                padding: 0.75rem 0;
+            }
+            
+            .navbar-brand {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Modern Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-modern fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <i class="fas fa-paper-plane me-2"></i>AirportHub
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">
+                            <i class="fas fa-home me-1"></i>Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'flight_list' %}">
+                            <i class="fas fa-plane me-1"></i>Flights
+                        </a>
+                    </li>
+                    
+                    <!-- Portal Access Dropdown -->
+                    <li class="nav-item dropdown portal-dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="portalDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-th-large me-1"></i>Portals
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item portal-item" href="/customer/">
+                                    <div class="portal-icon icon-customer">
+                                        <i class="fas fa-user-friends"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fw-semibold">Customer Portal</div>
+                                        <small class="text-muted">Book & manage flights</small>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item portal-item" href="/airline/">
+                                    <div class="portal-icon icon-airline">
+                                        <i class="fas fa-plane-departure"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fw-semibold">Airline Operations</div>
+                                        <small class="text-muted">Flight scheduling & management</small>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item portal-item" href="/crew/">
+                                    <div class="portal-icon icon-crew">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fw-semibold">Crew Portal</div>
+                                        <small class="text-muted">Crew schedules & reports</small>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item portal-item" href="/admin-portal/">
+                                    <div class="portal-icon icon-admin">
+                                        <i class="fas fa-cogs"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fw-semibold">System Admin</div>
+                                        <small class="text-muted">System administration</small>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                                <img src="https://ui-avatars.com/api/?name={{ user.get_full_name|default:user.username }}&background=667eea&color=ffffff&size=32" 
+                                     class="user-avatar" alt="Profile">
+                                <span>{{ user.get_full_name|default:user.username }}</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#profile">
+                                    <i class="fas fa-user me-2"></i>Profile
+                                </a></li>
+                                <li><a class="dropdown-item" href="#settings">
+                                    <i class="fas fa-cog me-2"></i>Settings
+                                </a></li>
+                                {% if user.is_staff %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="/admin/">
+                                    <i class="fas fa-shield-alt me-2"></i>Admin Panel
+                                </a></li>
+                                {% endif %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'logout' %}">
+                                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                </a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">
+                                <i class="fas fa-sign-in-alt me-1"></i>Login
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'register' %}">
+                                <i class="fas fa-user-plus me-1"></i>Register
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content with top margin for fixed navbar -->
+    <div style="margin-top: 80px;">
+        <!-- Messages -->
+        {% if messages %}
+            <div class="container mt-3">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show border-0 shadow-sm" role="alert">
+                        <i class="fas fa-info-circle me-2"></i>{{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Main Content -->
+        <main>
+            {% block content %}
+            {% endblock %}
+        </main>
+    </div>
+
+    <!-- Modern Footer -->
+    <footer class="footer-modern">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5 class="fw-bold mb-3">
+                        <i class="fas fa-paper-plane me-2 text-primary"></i>AirportHub
+                    </h5>
+                    <p class="text-muted">Modern airport management platform with multi-portal architecture for seamless travel experience.</p>
+                    <div class="d-flex gap-2">
+                        <a href="#" class="btn btn-outline-primary btn-sm">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline-primary btn-sm">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline-primary btn-sm">
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <h6 class="fw-semibold mb-3">Portals</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="/customer/" class="text-muted text-decoration-none">Customer</a></li>
+                        <li><a href="/airline/" class="text-muted text-decoration-none">Airline Ops</a></li>
+                        <li><a href="/crew/" class="text-muted text-decoration-none">Crew</a></li>
+                        <li><a href="/admin-portal/" class="text-muted text-decoration-none">Admin</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <h6 class="fw-semibold mb-3">Services</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-muted text-decoration-none">Flight Booking</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Check-in</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Flight Status</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Support</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <h6 class="fw-semibold mb-3">Company</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-muted text-decoration-none">About</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Careers</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Contact</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Privacy</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <h6 class="fw-semibold mb-3">Tech Stack</h6>
+                    <ul class="list-unstyled">
+                        <li><span class="text-muted">Django 5.2.5</span></li>
+                        <li><span class="text-muted">Bootstrap 5</span></li>
+                        <li><span class="text-muted">SQLite</span></li>
+                        <li><span class="text-muted">Python</span></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="text-muted mb-0">&copy; 2025 AirportHub. Class 12 Informatics Practices Project.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <span class="badge bg-primary">Django Powered</span>
+                    <span class="badge bg-success">Multi-Portal</span>
+                    <span class="badge bg-info">Modern UI</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Flight Briefing{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2>Flight Briefing</h2>
+  {% if briefing %}
+    <div class="card">
+      <div class="card-body">
+        <h5>{{ briefing.flight.flight_number }} — {{ briefing.flight.airline }}</h5>
+        <p>{{ briefing.notes }}</p>
+        <h6>Safety Items</h6>
+        <ul>
+          {% for item in briefing.safety_items %}
+            <li>{{ item }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  {% else %}
+    <div class="alert alert-info">No briefing available.</div>
+  {% endif %}
+</div>
+{% endblock %}

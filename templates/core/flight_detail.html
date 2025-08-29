@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ flight.flight_number }} - Flight Details{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'flight_list' %}">Flights</a></li>
+                <li class="breadcrumb-item active">{{ flight.flight_number }}</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="card-title mb-0">
+                    <i class="fas fa-plane"></i> Flight {{ flight.flight_number }}
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Flight Information</h5>
+                        <table class="table table-borderless">
+                            <tr>
+                                <td><strong>Airline:</strong></td>
+                                <td>{{ flight.airline }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Aircraft:</strong></td>
+                                <td>{{ flight.aircraft_type }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Status:</strong></td>
+                                <td>
+                                    <span class="badge bg-{% if flight.status == 'scheduled' %}primary{% elif flight.status == 'boarding' %}warning{% elif flight.status == 'departed' %}success{% elif flight.status == 'arrived' %}info{% elif flight.status == 'delayed' %}warning{% else %}danger{% endif %}">
+                                        {{ flight.get_status_display }}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Gate:</strong></td>
+                                <td>{{ flight.gate_number|default:"TBA" }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Route & Schedule</h5>
+                        <table class="table table-borderless">
+                            <tr>
+                                <td><strong>From:</strong></td>
+                                <td>{{ flight.departure_city }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>To:</strong></td>
+                                <td>{{ flight.arrival_city }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Departure:</strong></td>
+                                <td>{{ flight.departure_time|date:"M d, Y H:i" }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Arrival:</strong></td>
+                                <td>{{ flight.arrival_time|date:"M d, Y H:i" }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-ticket-alt"></i> Booking Information
+                </h5>
+            </div>
+            <div class="card-body text-center">
+                <h2 class="text-primary">₹{{ flight.price }}</h2>
+                <p class="text-muted">per passenger</p>
+                
+                <div class="mb-3">
+                    <i class="fas fa-chair fa-2x text-muted"></i>
+                    <div class="mt-2">
+                        <strong>{{ flight.available_seats }}</strong> of <strong>{{ flight.total_seats }}</strong>
+                        <br>
+                        <small class="text-muted">seats available</small>
+                    </div>
+                </div>
+                
+                {% if flight.available_seats > 0 and flight.status == 'scheduled' %}
+                    <button class="btn btn-success btn-lg w-100" onclick="alert('Booking functionality would be implemented here!')">
+                        <i class="fas fa-ticket-alt"></i> Book Now
+                    </button>
+                {% else %}
+                    <button class="btn btn-secondary btn-lg w-100" disabled>
+                        <i class="fas fa-times"></i> 
+                        {% if flight.available_seats == 0 %}
+                            Fully Booked
+                        {% else %}
+                            Not Available
+                        {% endif %}
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Flight Status Timeline -->
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-clock"></i> Flight Timeline
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="timeline">
+                    <div class="timeline-item {% if flight.status == 'scheduled' %}active{% endif %}">
+                        <i class="fas fa-calendar-check"></i>
+                        <span>Scheduled</span>
+                    </div>
+                    <div class="timeline-item {% if flight.status == 'boarding' %}active{% endif %}">
+                        <i class="fas fa-door-open"></i>
+                        <span>Boarding</span>
+                    </div>
+                    <div class="timeline-item {% if flight.status == 'departed' %}active{% endif %}">
+                        <i class="fas fa-plane-departure"></i>
+                        <span>Departed</span>
+                    </div>
+                    <div class="timeline-item {% if flight.status == 'arrived' %}active{% endif %}">
+                        <i class="fas fa-plane-arrival"></i>
+                        <span>Arrived</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-info-circle"></i> Additional Information
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h6>Check-in Information</h6>
+                        <p class="text-muted">
+                            Online check-in opens 24 hours before departure.
+                            Airport check-in closes 2 hours before departure for domestic flights.
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>Baggage Allowance</h6>
+                        <p class="text-muted">
+                            Cabin: 7kg hand baggage<br>
+                            Check-in: 23kg for economy class
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>Contact</h6>
+                        <p class="text-muted">
+                            For assistance, please contact airport customer service
+                            or visit the airline counter.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<style>
+.timeline {
+    position: relative;
+    padding-left: 20px;
+}
+
+.timeline-item {
+    position: relative;
+    padding: 10px 0;
+    border-left: 2px solid #dee2e6;
+    padding-left: 30px;
+    margin-bottom: 10px;
+}
+
+.timeline-item:last-child {
+    margin-bottom: 0;
+}
+
+.timeline-item.active {
+    border-left-color: #007bff;
+    color: #007bff;
+    font-weight: bold;
+}
+
+.timeline-item i {
+    position: absolute;
+    left: -8px;
+    top: 12px;
+    background: white;
+    border: 2px solid #dee2e6;
+    border-radius: 50%;
+    padding: 3px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+}
+
+.timeline-item.active i {
+    border-color: #007bff;
+    color: #007bff;
+}
+</style>
+{% endblock %}

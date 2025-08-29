@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Training Center{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2>Training Center</h2>
+  {% if courses %}
+    <div class="row">
+      {% for c in courses %}
+        <div class="col-md-4 mb-3">
+          <div class="card">
+            <div class="card-body">
+              <h5>{{ c.title }}</h5>
+              <p class="small text-muted">Duration: {{ c.duration }}</p>
+              <a href="#" class="btn btn-sm btn-primary">Enroll</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info">No training courses available.</div>
+  {% endif %}
+</div>
+{% endblock %}

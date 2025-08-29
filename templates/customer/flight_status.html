@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Live Flight Status - Track Your Flight{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold">Live Flight Status</h2>
+                <p class="lead text-muted">Track any flight in real-time</p>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form method="GET">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Flight Number</label>
+                                <input type="text" class="form-control" name="flight_number" placeholder="e.g., AI101" value="{{ request.GET.flight_number }}">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Date</label>
+                                <input type="date" class="form-control" name="date" value="{{ request.GET.date }}">
+                            </div>
+                            <div class="col-md-4 d-flex align-items-end">
+                                <button type="submit" class="btn btn-primary w-100">Track Flight</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            {% if flights %}
+                <h4 class="mb-3">Flight Results</h4>
+                {% for flight in flights %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-2">
+                                <h5 class="mb-0">{{ flight.flight_number }}</h5>
+                                <small class="text-muted">{{ flight.airline }}</small>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="d-flex justify-content-between">
+                                    <div class="text-center">
+                                        <div class="fw-bold">{{ flight.departure_time|date:"H:i" }}</div>
+                                        <small class="text-muted">{{ flight.departure_city }}</small>
+                                    </div>
+                                    <div class="align-self-center">
+                                        <i class="fas fa-plane text-primary"></i>
+                                    </div>
+                                    <div class="text-center">
+                                        <div class="fw-bold">{{ flight.arrival_time|date:"H:i" }}</div>
+                                        <small class="text-muted">{{ flight.arrival_city }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2 text-center">
+                                <div class="fw-bold">Gate {{ flight.gate_number|default:"TBD" }}</div>
+                            </div>
+                            <div class="col-md-2 text-center">
+                                {% if flight.status == 'scheduled' %}
+                                    <span class="badge bg-success">On Time</span>
+                                {% elif flight.status == 'delayed' %}
+                                    <span class="badge bg-warning">Delayed</span>
+                                {% elif flight.status == 'boarding' %}
+                                    <span class="badge bg-primary">Boarding</span>
+                                {% elif flight.status == 'departed' %}
+                                    <span class="badge bg-info">Departed</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">{{ flight.get_status_display }}</span>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-2 text-center">
+                                <small class="text-muted">{{ flight.available_seats }} seats left</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% elif request.GET.flight_number %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>No flights found matching your search criteria.
+                </div>
+            {% else %}
+                <h4 class="mb-3">Today's Departures</h4>
+                {% if todays_flights %}
+                    {% for flight in todays_flights %}
+                    <div class="card mb-2">
+                        <div class="card-body py-2">
+                            <div class="row align-items-center">
+                                <div class="col-md-2">
+                                    <strong>{{ flight.flight_number }}</strong>
+                                </div>
+                                <div class="col-md-4">
+                                    {{ flight.departure_city }} → {{ flight.arrival_city }}
+                                </div>
+                                <div class="col-md-2">
+                                    {{ flight.departure_time|date:"H:i" }}
+                                </div>
+                                <div class="col-md-2">
+                                    Gate {{ flight.gate_number|default:"TBD" }}
+                                </div>
+                                <div class="col-md-2">
+                                    <span class="badge bg-success">On Time</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-plane fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">No flights scheduled for today.</p>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

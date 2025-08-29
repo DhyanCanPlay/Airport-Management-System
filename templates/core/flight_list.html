@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+
+{% block title %}Flights - Airport Management System{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1>
+            <i class="fas fa-plane"></i> Flight Schedule
+        </h1>
+        <p class="text-muted">Search and view available flights</p>
+    </div>
+</div>
+
+<!-- Search Form -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-search"></i> Search Flights
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="get" class="row g-3">
+                    <div class="col-md-3">
+                        {{ form.departure_city }}
+                    </div>
+                    <div class="col-md-3">
+                        {{ form.arrival_city }}
+                    </div>
+                    <div class="col-md-3">
+                        {{ form.departure_date }}
+                    </div>
+                    <div class="col-md-2">
+                        {{ form.airline }}
+                    </div>
+                    <div class="col-md-1">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Flight Results -->
+<div class="row">
+    <div class="col-12">
+        {% if flights %}
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-list"></i> Available Flights
+                    </h5>
+                    <small class="text-muted">
+                        Showing {{ page_obj.start_index }}-{{ page_obj.end_index }} of {{ page_obj.paginator.count }} flights
+                    </small>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover mb-0">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Flight</th>
+                                    <th>Airline</th>
+                                    <th>Route</th>
+                                    <th>Departure</th>
+                                    <th>Arrival</th>
+                                    <th>Price</th>
+                                    <th>Seats</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for flight in flights %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ flight.flight_number }}</strong>
+                                    </td>
+                                    <td>{{ flight.airline }}</td>
+                                    <td>
+                                        {{ flight.departure_city }}
+                                        <i class="fas fa-arrow-right text-muted mx-1"></i>
+                                        {{ flight.arrival_city }}
+                                    </td>
+                                    <td>
+                                        {{ flight.departure_time|date:"M d, H:i" }}
+                                    </td>
+                                    <td>
+                                        {{ flight.arrival_time|date:"M d, H:i" }}
+                                    </td>
+                                    <td>
+                                        <strong>₹{{ flight.price }}</strong>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-{% if flight.available_seats > 10 %}success{% elif flight.available_seats > 0 %}warning{% else %}danger{% endif %}">
+                                            {{ flight.available_seats }} available
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-{% if flight.status == 'scheduled' %}primary{% elif flight.status == 'boarding' %}warning{% elif flight.status == 'departed' %}success{% elif flight.status == 'arrived' %}info{% elif flight.status == 'delayed' %}warning{% else %}danger{% endif %}">
+                                            {{ flight.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'flight_detail' flight.id %}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            {% if page_obj.has_other_pages %}
+            <nav aria-label="Flight pagination" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1{% if request.GET.departure_city %}&departure_city={{ request.GET.departure_city }}{% endif %}{% if request.GET.arrival_city %}&arrival_city={{ request.GET.arrival_city }}{% endif %}{% if request.GET.departure_date %}&departure_date={{ request.GET.departure_date }}{% endif %}{% if request.GET.airline %}&airline={{ request.GET.airline }}{% endif %}">
+                                <i class="fas fa-angle-double-left"></i>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.departure_city %}&departure_city={{ request.GET.departure_city }}{% endif %}{% if request.GET.arrival_city %}&arrival_city={{ request.GET.arrival_city }}{% endif %}{% if request.GET.departure_date %}&departure_date={{ request.GET.departure_date }}{% endif %}{% if request.GET.airline %}&airline={{ request.GET.airline }}{% endif %}">
+                                <i class="fas fa-angle-left"></i>
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ num }}</span>
+                            </li>
+                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ num }}{% if request.GET.departure_city %}&departure_city={{ request.GET.departure_city }}{% endif %}{% if request.GET.arrival_city %}&arrival_city={{ request.GET.arrival_city }}{% endif %}{% if request.GET.departure_date %}&departure_date={{ request.GET.departure_date }}{% endif %}{% if request.GET.airline %}&airline={{ request.GET.airline }}{% endif %}">{{ num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.departure_city %}&departure_city={{ request.GET.departure_city }}{% endif %}{% if request.GET.arrival_city %}&arrival_city={{ request.GET.arrival_city }}{% endif %}{% if request.GET.departure_date %}&departure_date={{ request.GET.departure_date }}{% endif %}{% if request.GET.airline %}&airline={{ request.GET.airline }}{% endif %}">
+                                <i class="fas fa-angle-right"></i>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.departure_city %}&departure_city={{ request.GET.departure_city }}{% endif %}{% if request.GET.arrival_city %}&arrival_city={{ request.GET.arrival_city }}{% endif %}{% if request.GET.departure_date %}&departure_date={{ request.GET.departure_date }}{% endif %}{% if request.GET.airline %}&airline={{ request.GET.airline }}{% endif %}">
+                                <i class="fas fa-angle-double-right"></i>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+
+        {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i>
+                No flights found matching your search criteria.
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

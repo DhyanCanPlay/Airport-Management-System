@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}User Management{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2>User Management</h2>
+  <div class="mb-3 text-end"><a href="{% url 'admin:user_create' %}" class="btn btn-primary">Add User</a></div>
+  {% if users %}
+    <table class="table">
+      <thead><tr><th>Username</th><th>Name</th><th>Email</th><th>Staff</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for u in users %}
+          <tr>
+            <td>{{ u.username }}</td>
+            <td>{{ u.get_full_name }}</td>
+            <td>{{ u.email }}</td>
+            <td>{{ u.is_staff }}</td>
+            <td>
+              <a href="{% url 'admin:user_edit' u.id %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+              <a href="{% url 'admin:user_delete' u.id %}" class="btn btn-sm btn-danger">Delete</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="alert alert-info">No users available.</div>
+  {% endif %}
+</div>
+{% endblock %}

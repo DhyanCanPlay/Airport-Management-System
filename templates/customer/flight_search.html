@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Flight Search - Find Your Perfect Flight{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="text-center py-5">
+                <i class="fas fa-search fa-4x text-primary mb-4"></i>
+                <h2 class="fw-bold mb-3">Flight Search</h2>
+                <p class="lead text-muted">Find and book your perfect flight.</p>
+                
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <form method="GET">
+                            <div class="row g-3">
+                                <div class="col-md-3">
+                                    <label class="form-label">From</label>
+                                    <input type="text" class="form-control" name="from" placeholder="Departure City" value="{{ request.GET.from }}">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">To</label>
+                                    <input type="text" class="form-control" name="to" placeholder="Destination City" value="{{ request.GET.to }}">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Departure Date</label>
+                                    <input type="date" class="form-control" name="departure_date" value="{{ request.GET.departure_date }}">
+                                </div>
+                                <div class="col-md-3 d-flex align-items-end">
+                                    <button type="submit" class="btn btn-primary w-100">Search Flights</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                {% if flights %}
+                <div class="row mt-4">
+                    {% for flight in flights %}
+                    <div class="col-12 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-md-3">
+                                        <h5>{{ flight.flight_number }}</h5>
+                                        <small class="text-muted">{{ flight.airline }}</small>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="d-flex justify-content-between">
+                                            <div>{{ flight.departure_time|date:"H:i" }}<br><small>{{ flight.departure_city }}</small></div>
+                                            <div class="align-self-center"><i class="fas fa-plane"></i></div>
+                                            <div>{{ flight.arrival_time|date:"H:i" }}<br><small>{{ flight.arrival_city }}</small></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 text-center">
+                                        <strong>₹{{ flight.price }}</strong>
+                                    </div>
+                                    <div class="col-md-3 text-end">
+                                        <a href="{% url 'customer:make_booking' flight.id %}" class="btn btn-primary">Book Now</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% elif request.GET.from or request.GET.to %}
+                <div class="alert alert-info mt-4">
+                    <i class="fas fa-info-circle me-2"></i>No flights found for your search criteria.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

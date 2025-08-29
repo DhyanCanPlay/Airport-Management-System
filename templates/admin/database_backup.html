@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Database Backup{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2>Database Backup</h2>
+  <p class="text-muted">Create or download backups of the production database.</p>
+  <form method="post">
+    {% csrf_token %}
+    <button class="btn btn-primary" name="action" value="create">Create Backup</button>
+    <button class="btn btn-outline-secondary" name="action" value="download">Download Latest</button>
+  </form>
+</div>
+{% endblock %}

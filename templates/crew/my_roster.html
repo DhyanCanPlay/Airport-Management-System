@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Roster{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2>My Roster</h2>
+  {% if roster %}
+    <table class="table">
+      <thead><tr><th>Date</th><th>Flight</th><th>Role</th></tr></thead>
+      <tbody>
+        {% for r in roster %}
+          <tr><td>{{ r.date }}</td><td>{{ r.flight.flight_number }}</td><td>{{ r.role }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="alert alert-info">No roster assigned.</div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Loyalty Program - Rewards & Benefits{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="text-center py-5">
+                <i class="fas fa-crown fa-4x text-warning mb-4"></i>
+                <h2 class="fw-bold mb-3">Loyalty Rewards Program</h2>
+                <p class="lead text-muted">Earn points and unlock exclusive benefits with every flight.</p>
+                
+                {% if user.is_authenticated %}
+                <div class="row mt-5">
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-star fa-3x text-warning mb-3"></i>
+                                <h4>Your Points</h4>
+                                <h2 class="text-primary">2,450</h2>
+                                <p class="text-muted">Available to redeem</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-trophy fa-3x text-success mb-3"></i>
+                                <h4>Status</h4>
+                                <h3 class="text-success">Silver</h3>
+                                <p class="text-muted">Next: Gold (1,550 points)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-plane fa-3x text-info mb-3"></i>
+                                <h4>Flights</h4>
+                                <h2 class="text-info">12</h2>
+                                <p class="text-muted">This year</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Recent Point Activity</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group list-group-flush">
+                            <div class="list-group-item d-flex justify-content-between">
+                                <span>Flight booking - AI101</span>
+                                <span class="text-success">+150 points</span>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between">
+                                <span>Bonus promotion</span>
+                                <span class="text-success">+200 points</span>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between">
+                                <span>Reward redemption</span>
+                                <span class="text-danger">-500 points</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="alert alert-info mt-4">
+                    <h5><i class="fas fa-info-circle me-2"></i>Join Our Loyalty Program</h5>
+                    <p>Sign up to start earning points and unlock exclusive benefits!</p>
+                    <a href="{% url 'register' %}" class="btn btn-primary">Join Now</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

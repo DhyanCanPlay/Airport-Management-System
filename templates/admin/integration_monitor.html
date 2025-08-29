@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Integration Monitor{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2>Integration Health</h2>
+  {% if services %}
+    <ul class="list-group">
+      {% for s in services %}
+        <li class="list-group-item d-flex justify-content-between"><div>{{ s.name }}</div><div>{{ s.status }}</div></li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <div class="alert alert-info">No external integrations configured.</div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Qualifications{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2>Qualifications</h2>
+  {% if qualifications %}
+    <ul class="list-group">
+      {% for q in qualifications %}
+        <li class="list-group-item">{{ q.name }} — Expires: {{ q.expires_on }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <div class="alert alert-info">No qualifications recorded.</div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2>System Administration</h2>
+  <div class="row g-3">
+    <div class="col-md-3"><a href="{% url 'admin:user_management' %}" class="btn btn-outline-primary w-100">User Management</a></div>
+    <div class="col-md-3"><a href="{% url 'admin:roles_permissions' %}" class="btn btn-outline-secondary w-100">Roles & Permissions</a></div>
+    <div class="col-md-3"><a href="{% url 'admin:system_configuration' %}" class="btn btn-outline-success w-100">System Config</a></div>
+    <div class="col-md-3"><a href="{% url 'admin:integration_monitor' %}" class="btn btn-outline-info w-100">Integration Monitor</a></div>
+  </div>
+</div>
+{% endblock %}

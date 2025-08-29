@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Turnaround Coordination{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2>Turnaround Coordination</h2>
+  <p class="text-muted">Manage turnaround tasks for arrivals and departures.</p>
+  {% if tasks %}
+    <table class="table">
+      <thead><tr><th>Flight</th><th>Task</th><th>Owner</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for t in tasks %}
+          <tr>
+            <td>{{ t.flight.flight_number }}</td>
+            <td>{{ t.description }}</td>
+            <td>{{ t.owner.user.get_full_name if t.owner }}</td>
+            <td>{{ t.status }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="alert alert-info">No turnaround tasks.</div>
+  {% endif %}
+</div>
+{% endblock %}

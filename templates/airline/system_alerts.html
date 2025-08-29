@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}System Alerts{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2>System Alerts</h2>
+  {% if alerts %}
+    <ul class="list-group">
+      {% for a in alerts %}
+        <li class="list-group-item">
+          <strong>{{ a.level|upper }}</strong> — {{ a.message }} <div class="small text-muted">{{ a.created_at }}</div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <div class="alert alert-info">No system alerts.</div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Staff - Team Directory{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2 class="mb-4">Staff Directory</h2>
+  {% if page_obj and page_obj.object_list %}
+  <div class="row">
+    {% for staff in page_obj.object_list %}
+      <div class="col-md-4 mb-3">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{ staff.user.get_full_name }}</h5>
+            <p class="card-text">Role: {{ staff.role|capfirst }}<br>Department: {{ staff.department }}</p>
+            <p class="mb-1 small text-muted">Employee ID: {{ staff.employee_id }}</p>
+            <a href="mailto:{{ staff.user.email }}" class="btn btn-sm btn-outline-primary">Contact</a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  {% else %}
+    <div class="alert alert-info">No staff members found.</div>
+  {% endif %}
+</div>
+{% endblock %}

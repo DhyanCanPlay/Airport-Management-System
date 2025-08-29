@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Gate Management{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2 class="mb-4">Gate Management</h2>
+  <div class="row">
+    {% for gate in gates|default:[] %}
+      <div class="col-md-3 mb-3">
+        <div class="card p-3">
+          <h5>Gate {{ gate.number }}</h5>
+          <p class="mb-1">Status: {{ gate.status }}</p>
+          <p class="mb-1">Assigned Flight: {{ gate.current_flight.flight_number if gate.current_flight }}</p>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-12"><div class="alert alert-info">No gates configured.</div></div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

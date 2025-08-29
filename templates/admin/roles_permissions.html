@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Roles & Permissions{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2>Roles & Permissions</h2>
+  {% if roles %}
+    <ul class="list-group">
+      {% for r in roles %}
+        <li class="list-group-item d-flex justify-content-between"><div>{{ r.name }}</div><div>{{ r.permissions.count }} perms</div></li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <div class="alert alert-info">No roles configured.</div>
+  {% endif %}
+</div>
+{% endblock %}

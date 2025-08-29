@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}System Metrics{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2>System Metrics</h2>
+  {% if metrics %}
+    <div class="row g-3">
+      {% for m in metrics %}
+        <div class="col-md-3"><div class="card p-3">{{ m.name }}<br><strong>{{ m.value }}</strong></div></div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info">No metrics available.</div>
+  {% endif %}
+</div>
+{% endblock %}

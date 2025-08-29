@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Passenger Assistance{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2>Passenger Assistance Requests</h2>
+  {% if requests %}
+    <ul class="list-group">
+      {% for r in requests %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <strong>{{ r.booking.passenger.full_name }}</strong> — {{ r.issue_summary }}
+            <div class="small text-muted">{{ r.created_at }}</div>
+          </div>
+          <div>
+            <a href="#" class="btn btn-sm btn-outline-primary">Assign</a>
+            <a href="#" class="btn btn-sm btn-danger">Resolve</a>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <div class="alert alert-info">No assistance requests.</div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Bidding & Swaps{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2>Bidding & Swaps</h2>
+  {% if bids %}
+    <ul class="list-group">
+      {% for b in bids %}
+        <li class="list-group-item d-flex justify-content-between">
+          <div>{{ b.flight.flight_number }} — {{ b.status }}</div>
+          <div>
+            <a href="#" class="btn btn-sm btn-outline-primary">Bid</a>
+            <a href="#" class="btn btn-sm btn-outline-secondary">Swap</a>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <div class="alert alert-info">No bids available.</div>
+  {% endif %}
+</div>
+{% endblock %}
